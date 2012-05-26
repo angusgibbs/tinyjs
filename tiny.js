@@ -491,6 +491,9 @@
 				}
 			});
 
+			// Keep only the unique matches
+			matches = $.unique(matches);
+
 			// Remove the old elements
 			for (var i = 0; i < this.length; i++) {
 				delete this[i];
@@ -942,6 +945,39 @@
 			return finds;
 		};
 	}
+
+	/**
+	 * Returns an array with only unique values
+	 *
+	 * @param {Object} obj
+	 *
+	 * @return {Object} unique
+	 */
+	$.unique = function(obj) {
+		// Define the unique array
+		var unique = [];
+
+		// Go through every element in the object
+		for (var i = 0; i < obj.length; i++) {
+			// Check against the unique array if it should be added
+			var shouldAdd = true;
+			for (var j = 0; j < unique.length; j++) {
+				// Object is not unique; break
+				if (obj[i] === unique[j]) {
+					shouldAdd = false;
+					break;
+				}
+			}
+
+			// Add the element to the unique array if it is unique
+			if (shouldAdd) {
+				unique.push(obj[i]);
+			}
+		}
+
+		// Return the unique array
+		return unique;
+	};
 
 	/**
 	 * Filters, using $().is() or $().filter()
