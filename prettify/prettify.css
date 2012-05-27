@@ -24,8 +24,6 @@ pre.prettyprint, code.prettyprint {
 }
 
 .prettyprint {
-	margin: 0 0 16px;
-	padding: 16px;
 	white-space: pre-wrap;
 }
 

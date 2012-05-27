@@ -82,6 +82,7 @@ pre, p {
 pre {
 	font-family: 'Courier New', Courier, monospace;
 	font-size: 16px;
+	padding: 16px;
 }
 
 code {
