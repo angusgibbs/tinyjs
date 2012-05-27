@@ -1,12 +1,11 @@
-<<<<<<< HEAD
-<!doctype html>
-<html>
-	<head>
+<!DOCTYPE html>
+<!-- saved from url=(0040)file:///C:/Sites/pages/tinyjs/index.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta charset="utf-8">
 		<title>Tiny.js - A Tiny JavaScript Framework</title>
-		<link rel="stylesheet" href="prettify/prettify.css">
-		<script src="prettify/prettify.js"></script>
-		<link rel="stylesheet" href="style.css">
+		<link rel="stylesheet" href="file:///C:/Sites/pages/tinyjs/prettify/prettify.css">
+		<script src="file:///C:/Sites/pages/tinyjs/prettify/prettify.js"></script>
+		<link rel="stylesheet" href="file:///C:/Sites/pages/tinyjs/style.css">
 	</head>
 	<body onload="prettyPrint()">
 		<div class="wrap">
@@ -16,13 +15,13 @@
 			<div class="main">
 				<h2>Table of Contents</h2>
 				<ul>
-					<li><a href="#about">What is Tiny.js</a></li>
-					<li><a href="#docs">Docs</a>
+					<li><a href="file:///C:/Sites/pages/tinyjs/index.html#about">What is Tiny.js</a></li>
+					<li><a href="file:///C:/Sites/pages/tinyjs/index.html#docs">Docs</a>
 						<ul>
-							<li><a href="#creating">Creating the tiny object</a></li>
-							<li><a href="#methods">Methods</a></li>
-							<li><a href="#helpers">Tiny.js Helper Functions</a></li>
-							<li><a href="#extending">Extending the Tiny.js Methods</a></li>
+							<li><a href="file:///C:/Sites/pages/tinyjs/index.html#creating">Creating the tiny object</a></li>
+							<li><a href="file:///C:/Sites/pages/tinyjs/index.html#methods">Methods</a></li>
+							<li><a href="file:///C:/Sites/pages/tinyjs/index.html#helpers">Tiny.js Helper Functions</a></li>
+							<li><a href="file:///C:/Sites/pages/tinyjs/index.html#extending">Extending the Tiny.js Methods</a></li>
 						</ul>
 					</li>
 				</ul>
@@ -34,13 +33,13 @@
 				<h3 id="creating">Creating the tiny object</h3>
 				<p>Creating a tiny object is easy. Simply pass a selector, DOMObject, or array of DOMObjects to the <code>$</code> function:</p>
 
-<pre class="prettyprint">$('#foo'); // Works
-$(document.getElementById('foo')); // Works
-$([document.getElementById('foo'), document.getElementById('bar')]); // Works</pre>
+<pre class="prettyprint"><span class="pln">$</span><span class="pun">(</span><span class="str">'#foo'</span><span class="pun">);</span><span class="pln"> </span><span class="com">// Works</span><span class="pln">
+$</span><span class="pun">(</span><span class="pln">document</span><span class="pun">.</span><span class="pln">getElementById</span><span class="pun">(</span><span class="str">'foo'</span><span class="pun">));</span><span class="pln"> </span><span class="com">// Works</span><span class="pln">
+$</span><span class="pun">([</span><span class="pln">document</span><span class="pun">.</span><span class="pln">getElementById</span><span class="pun">(</span><span class="str">'foo'</span><span class="pun">),</span><span class="pln"> document</span><span class="pun">.</span><span class="pln">getElementById</span><span class="pun">(</span><span class="str">'bar'</span><span class="pun">)]);</span><span class="pln"> </span><span class="com">// Works</span></pre>
 
 				<p>Only simple selectors are allowed to be passed (class names, tag names, or IDs); descendant selectors are OK. So, <code>$('#id hello .me')</code> is alright, but <code>$('#id.hello input[type=text]')</code> won't work in older browsers. Tiny.js is able to remain tiny by not having a super complex polyfilling system for browsers without <code>document.querySelectorAll</code>.
 
-				<h3>Using the tiny object</h3>
+				</p><h3>Using the tiny object</h3>
 				<p>Once you have your tiny object, you might as well use it.</p>
 
 				<h3 id="methods">Methods</h3>
@@ -48,7 +47,7 @@ $([document.getElementById('foo'), document.getElementById('bar')]); // Works</p
 				<p>All the Tiny.js methods are chainable.</p>
 
 				<table>
-					<tr>
+					<tbody><tr>
 						<th>Method</th>
 						<th>Parameters</th>
 						<th>Description</th>
@@ -72,11 +71,11 @@ $([document.getElementById('foo'), document.getElementById('bar')]); // Works</p
 						<td><strong>css</strong></td>
 						<td><em>String</em> property, <em>String</em> value<br><br><em>JSON Object</em> attributes</td>
 						<td><p>Sets the CSS of the elements in the tiny object. A property/value pair can be passed, or a JSON object, like so:</p>
-<pre class="prettyprint">$('#foo').css('color', 'red'); // Works
-$('#foo').css({
-	'color': 'red',
-	'background': 'black'
-}); // Works</pre>
+<pre class="prettyprint"><span class="pln">$</span><span class="pun">(</span><span class="str">'#foo'</span><span class="pun">).</span><span class="pln">css</span><span class="pun">(</span><span class="str">'color'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'red'</span><span class="pun">);</span><span class="pln"> </span><span class="com">// Works</span><span class="pln">
+$</span><span class="pun">(</span><span class="str">'#foo'</span><span class="pun">).</span><span class="pln">css</span><span class="pun">({</span><span class="pln">
+	</span><span class="str">'color'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'red'</span><span class="pun">,</span><span class="pln">
+	</span><span class="str">'background'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'black'</span><span class="pln">
+</span><span class="pun">});</span><span class="pln"> </span><span class="com">// Works</span></pre>
 						</td>
 					</tr>
 					<tr id="hide">
@@ -92,52 +91,52 @@ $('#foo').css({
 					<tr id="toggle">
 						<td><strong>toggle</strong></td>
 						<td></td>
-						<td><p>Toggles the visibility of the elements in the tiny object.</td>
+						<td><p>Toggles the visibility of the elements in the tiny object.</p></td>
 					</tr>
 					<tr id="attr">
 						<td><strong>attr</strong></td>
 						<td><em>String</em> attribute, <em>String</em> value<br><br><em>JSON Object</em> attributes</td>
 						<td><p>Much like the css method, the attribute method accepts either an attribute/value pair or a JSON object of key/value pairs:</p>
-<pre class="prettyprint">$('#foo').attr('data-awesome', 'yes'); // Works
-$('#foo').attr({
-	'data-awesome': 'yes',
-	'data-easy': 'yes'
-}); // Works</pre>
+<pre class="prettyprint"><span class="pln">$</span><span class="pun">(</span><span class="str">'#foo'</span><span class="pun">).</span><span class="pln">attr</span><span class="pun">(</span><span class="str">'data-awesome'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'yes'</span><span class="pun">);</span><span class="pln"> </span><span class="com">// Works</span><span class="pln">
+$</span><span class="pun">(</span><span class="str">'#foo'</span><span class="pun">).</span><span class="pln">attr</span><span class="pun">({</span><span class="pln">
+	</span><span class="str">'data-awesome'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'yes'</span><span class="pun">,</span><span class="pln">
+	</span><span class="str">'data-easy'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'yes'</span><span class="pln">
+</span><span class="pun">});</span><span class="pln"> </span><span class="com">// Works</span></pre>
 						</td>
 					</tr>
 					<tr id="each">
 						<td><strong>each</strong></td>
 						<td><em>Function</em> fn</td>
 						<td><p>Executes the function on each of the elements passed. The parameters passed are the key, and the object as a whole. For example:</p>
-<pre class="prettyprint">$('pre').each(function(key, obj) {
-	console.log(this); // The current object
-	console.log(key); // The current position in the tiny object (e.g. 0)
-	console.log(obj); // The tiny object
-});</pre>
+<pre class="prettyprint"><span class="pln">$</span><span class="pun">(</span><span class="str">'pre'</span><span class="pun">).</span><span class="pln">each</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">key</span><span class="pun">,</span><span class="pln"> obj</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+	console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="kwd">this</span><span class="pun">);</span><span class="pln"> </span><span class="com">// The current object</span><span class="pln">
+	console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="pln">key</span><span class="pun">);</span><span class="pln"> </span><span class="com">// The current position in the tiny object (e.g. 0)</span><span class="pln">
+	console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="pln">obj</span><span class="pun">);</span><span class="pln"> </span><span class="com">// The tiny object</span><span class="pln">
+</span><span class="pun">});</span></pre>
 						</td>
 					</tr>
 					<tr id="is">
 						<td><strong>is</strong></td>
 						<td><em>String</em> test</td>
 						<td>
-							<p>Returns whether <strong>all</strong> the elements pass a given filter. The filters are defined in <code>$.is</code>&mdash;this makes the filters extensible. Tiny.js comes with three built in filters:</p>
+							<p>Returns whether <strong>all</strong> the elements pass a given filter. The filters are defined in <code>$.is</code>—this makes the filters extensible. Tiny.js comes with three built in filters:</p>
 							<ul>
-								<li><strong>hidden</strong>&mdash;returns true if the element is hidden</li>
-								<li><strong>visible</strong>&mdash;returns true if the element is visible</li>
-								<li><strong>empty</strong>&mdash;returns true if the element has no child nodes</li>
+								<li><strong>hidden</strong>—returns true if the element is hidden</li>
+								<li><strong>visible</strong>—returns true if the element is visible</li>
+								<li><strong>empty</strong>—returns true if the element has no child nodes</li>
 							</ul>
 							<p>Extending the Tiny.js filters is easy: simply define a new filter on the <code>$.is</code> JSON object, and return true if the element passes the filter, and false otherwise:</p>
-<pre class="prettyprint">// Define a new filter that returns whether or not the element has red text
-$.is['colored-red'] = function() {
-	return this.style.color === 'red';
-};</pre>
+<pre class="prettyprint"><span class="com">// Define a new filter that returns whether or not the element has red text</span><span class="pln">
+$</span><span class="pun">.</span><span class="kwd">is</span><span class="pun">[</span><span class="str">'colored-red'</span><span class="pun">]</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+	</span><span class="kwd">return</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">style</span><span class="pun">.</span><span class="pln">color </span><span class="pun">===</span><span class="pln"> </span><span class="str">'red'</span><span class="pun">;</span><span class="pln">
+</span><span class="pun">};</span></pre>
 						</td>
 					</tr>
 					<tr id="filter">
 						<td><strong>filter</strong></td>
 						<td><em>String</em> test</td>
-						<td><p>Filters out the elements that do not pass the filter defined in <code>$.is</code>. See <a href="#is"><code>is()</code></a> for more information about filters.</p>
-					<tr id="html">
+						<td><p>Filters out the elements that do not pass the filter defined in <code>$.is</code>. See <a href="file:///C:/Sites/pages/tinyjs/index.html#is"><code>is()</code></a> for more information about filters.</p>
+					</td></tr><tr id="html">
 						<td><strong>html</strong></td>
 						<td>[<em>String</em> html]</td>
 						<td><p>Updates the innerHTML of each of the elements. If no string is passed, it returns the innerHTML of the first element (or false if the element does not exist).</p></td>
@@ -152,9 +151,9 @@ $.is['colored-red'] = function() {
 						<td><em>String/DOMObject/Tiny Object</em> template, <em>JSON Object</em> vals</td>
 						<td>
 							<p>Updates the innerHTML of each of the elements to match the template with the values substituted in for the placeholders. The template parameter accepts a string, a DOMObject, or a tiny object. Placeholders are defined as <code>${placeholdername}</code>.</p>
-<pre class="prettyprint">$('#foo').template('Hi, my name is ${name}', {
-	'name': 'Bar'
-}); // #foo's innerHTML is now 'Hello, my name is Bar'</pre>
+<pre class="prettyprint"><span class="pln">$</span><span class="pun">(</span><span class="str">'#foo'</span><span class="pun">).</span><span class="kwd">template</span><span class="pun">(</span><span class="str">'Hi, my name is ${name}'</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+	</span><span class="str">'name'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'Bar'</span><span class="pln">
+</span><span class="pun">});</span><span class="pln"> </span><span class="com">// #foo's innerHTML is now 'Hello, my name is Bar'</span></pre>
 						</td>
 					</tr>
 					<tr id="next">
@@ -191,15 +190,15 @@ $.is['colored-red'] = function() {
 						<td><em>String</em> event, <em>Function</em> fn<br><br><em>String</em> event, <em>String</em> selector, <em>Function</em> fn</td>
 						<td>
 							<p>Binds a function to an event. If a selector is passed as the second parameter, instead of a function, the event is delegated. For example:</p>
-<pre class="prettyprint">// Bind the click event to #foo
-$('#foo').on('click', function(e) {
-	// Do something with this here
-});
+<pre class="prettyprint"><span class="com">// Bind the click event to #foo</span><span class="pln">
+$</span><span class="pun">(</span><span class="str">'#foo'</span><span class="pun">).</span><span class="pln">on</span><span class="pun">(</span><span class="str">'click'</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">e</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+	</span><span class="com">// Do something with this here</span><span class="pln">
+</span><span class="pun">});</span><span class="pln">
 
-// Delegate the click event to any LIs inside #foo
-$('#foo').on('click', 'li', function(e) {
-	// Do something with the li here
-});</pre>
+</span><span class="com">// Delegate the click event to any LIs inside #foo</span><span class="pln">
+$</span><span class="pun">(</span><span class="str">'#foo'</span><span class="pun">).</span><span class="pln">on</span><span class="pun">(</span><span class="str">'click'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'li'</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">e</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+	</span><span class="com">// Do something with the li here</span><span class="pln">
+</span><span class="pun">});</span></pre>
 						</td>
 					</tr>
 					<tr id="off">
@@ -207,39 +206,39 @@ $('#foo').on('click', 'li', function(e) {
 						<td><em>String</em> event</td>
 						<td><p>Unbinds the event from each of the elements.</p></td>
 					</tr>
-				</table>
+				</tbody></table>
 
 				<h3 id="helpers">Tiny.js Helper Functions</h3>
 
 				<table>
-					<tr id="$.ajax">
+					<tbody><tr id="$.ajax">
 						<td><strong>$.ajax</strong></td>
 						<td><em>JSON Object</em> options</td>
 						<td>
 							<p>Performs an AJAX request for the given URL.</p>
 							<p>The options passed to <code>$.ajax</code> are in the form of a JSON object. An example using all the options would look like this:</p>
-<pre class="prettyprint">$.ajax({
-	url: 'http://something.com', // The URL that you are requesting
-	type: 'get', // Whether you are performing a GET or POST request (defaults to get)
-	data: 'foo=bar', // A string of the data you wish to send; if a JSON Object is passed it will be converted into a string
-	success: function(msg, code) {
-		// This function is called if the request is a success
-		// Msg now holds the text response
-		// Code holds the status code of the request
-	},
-	error: function(code) {
-		// This function is called if the request fails
-		// Code holds the status code of the request
-		// If the code is <a href="http://httpstatus.es/418">418 I'm a Teapot</a> the browser could not create an AJAX request
-	},
-	async: true // Whether or not to perform the AJAX request asynchronously
-});</pre>
+<pre class="prettyprint"><span class="pln">$</span><span class="pun">.</span><span class="pln">ajax</span><span class="pun">({</span><span class="pln">
+	url</span><span class="pun">:</span><span class="pln"> </span><span class="str">'http://something.com'</span><span class="pun">,</span><span class="pln"> </span><span class="com">// The URL that you are requesting</span><span class="pln">
+	type</span><span class="pun">:</span><span class="pln"> </span><span class="str">'get'</span><span class="pun">,</span><span class="pln"> </span><span class="com">// Whether you are performing a GET or POST request (defaults to get)</span><span class="pln">
+	data</span><span class="pun">:</span><span class="pln"> </span><span class="str">'foo=bar'</span><span class="pun">,</span><span class="pln"> </span><span class="com">// A string of the data you wish to send; if a JSON Object is passed it will be converted into a string</span><span class="pln">
+	success</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">msg</span><span class="pun">,</span><span class="pln"> code</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+		</span><span class="com">// This function is called if the request is a success</span><span class="pln">
+		</span><span class="com">// Msg now holds the text response</span><span class="pln">
+		</span><span class="com">// Code holds the status code of the request</span><span class="pln">
+	</span><span class="pun">},</span><span class="pln">
+	error</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">code</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+		</span><span class="com">// This function is called if the request fails</span><span class="pln">
+		</span><span class="com">// Code holds the status code of the request</span><span class="pln">
+		</span><span class="com">// If the code is </span><a href="http://httpstatus.es/418"><span class="com">418 I'm a Teapot</span></a><span class="com"> the browser could not create an AJAX request</span><span class="pln">
+	</span><span class="pun">},</span><span class="pln">
+	async</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">true</span><span class="pln"> </span><span class="com">// Whether or not to perform the AJAX request asynchronously</span><span class="pln">
+</span><span class="pun">});</span></pre>
 						</td>
 					</tr>
 					<tr id="$.qs">
 						<td><strong>$.qs</strong></td>
 						<td><em>String</em> selector[, <em>DOMObject</em> parent]</td>
-						<td><p>Queries the DOM (or the parent if it is passed) for the selector. The same types of selectors are allowed as when <a href="#creating">creating the tiny object</a>. This is a <code>document.querySelectorAll</code> polyfill (it uses the browser's native <code>document.querySelectorAll</code> if it exists).</p></td>
+						<td><p>Queries the DOM (or the parent if it is passed) for the selector. The same types of selectors are allowed as when <a href="file:///C:/Sites/pages/tinyjs/index.html#creating">creating the tiny object</a>. This is a <code>document.querySelectorAll</code> polyfill (it uses the browser's native <code>document.querySelectorAll</code> if it exists).</p></td>
 					</tr>
 					<tr id="$.unique">
 						<td><strong>$.unqiue</strong></td>
@@ -250,223 +249,24 @@ $('#foo').on('click', 'li', function(e) {
 						<td><strong>$.type</strong></td>
 						<td><em>Object</em> obj</td>
 						<td>
-							<p>Returns the more helpful type than <code>typeof obj</code>, using <a href="http://javascriptweblog.wordpress.com/2011/08/08/fixing-the-javascript-typeof-operator/">the function</a> created by <a href="http://javascriptweblog.wordpress.com">Angus Croll</a>. For instance, <code>$.type([1,2,3])</code> will return <code>array</code>, while <code>typeof [1,2,3]</code> will return <code>object</code>.</p>
+							<p>Returns the more helpful type than <code>typeof obj</code>, using <a href="http://javascriptweblog.wordpress.com/2011/08/08/fixing-the-javascript-typeof-operator/">the function</a> created by <a href="http://javascriptweblog.wordpress.com/">Angus Croll</a>. For instance, <code>$.type([1,2,3])</code> will return <code>array</code>, while <code>typeof [1,2,3]</code> will return <code>object</code>.</p>
 						</td>
 					</tr>
-				</table>
+				</tbody></table>
 
 				<h3 id="extending">Extending</h3>
 
-				<p>Extensions for tiny.js can be made just the same as for <a href="http://jquery.com">jQuery</a>. Here's a base template:</p>
+				<p>Extensions for tiny.js can be made just the same as for <a href="http://jquery.com/">jQuery</a>. Here's a base template:</p>
 
-<pre class="prettyprint">$.fn.myCoolPlugin = function(opts) {
-	return this.each(function() {
-		// Do something with each object here
-	});
-};</pre>
+<pre class="prettyprint"><span class="pln">$</span><span class="pun">.</span><span class="pln">fn</span><span class="pun">.</span><span class="pln">myCoolPlugin </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">opts</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+	</span><span class="kwd">return</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">each</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+		</span><span class="com">// Do something with each object here</span><span class="pln">
+	</span><span class="pun">});</span><span class="pln">
+</span><span class="pun">};</span></pre>
 			</div>
 			<footer>
 				Tiny.js is maintained by <a href="https://github.com/angusgibbs">Angus Gibbs</a> and can be found on <a href="https://github.com/angusgibbs/tinyjs">GitHub</a>.
 			</footer>
 		</div>
-	</body>
-</html>
-=======
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=640" />
-
-    <link rel="stylesheet" href="stylesheets/core.css" media="screen"/>
-    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)"/>
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
-
-    <script type="text/javascript" src="javascripts/modernizr.js"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
-    <script type="text/javascript">
-      $(document).ready(function () {
-        $('#main_content').headsmart()
-      })
-    </script>
-    <title>Tinyjs by angusgibbs</title>
-  </head>
-
-  <body>
-    <a id="forkme_banner" href="https://github.com/angusgibbs/tinyjs">View on GitHub</a>
-    <div class="shell">
-
-      <header>
-        <span class="ribbon-outer">
-          <span class="ribbon-inner">
-            <h1>Tinyjs</h1>
-            <h2>A tiny JavaScript framework.</h2>
-          </span>
-          <span class="left-tail"></span>
-          <span class="right-tail"></span>
-        </span>
-      </header>
-
-      <section id="downloads">
-        <span class="inner">
-          <a href="https://github.com/angusgibbs/tinyjs/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/angusgibbs/tinyjs/tarball/master" class="tgz"><em>download</em> .TGZ</a>
-        </span>
-      </section>
-
-
-      <span class="banner-fix"></span>
-
-
-      <section id="main_content">
-        <h1>Tiny.js</h1>
-
-<h2>by <a href="http://angusgibbs.com">Angus Gibbs</a>
-</h2>
-
-<h2>What is Tiny.js?</h2>
-
-<p>Tiny.js is a tiny Javascript framework. It was an awesome, chainable syntax, and just the right amount of built in features to make it a great way to develop cross browser web applications easily.</p>
-
-<h2>Docs</h2>
-
-<h3>Creating the tiny object</h3>
-
-<p>Creating a tiny object is easy. Simply pass a selector, DOMObject, or array of DOMObjects to the <code>$</code> function:</p>
-
- 
-$('#foo'); // Works
-$(document.getElementById('foo')); // Works
-$(document.getElementById('foo'), document.getElementById('bar')); // Works
- 
-
-<h3>Using the tiny object</h3>
-
-<p>Once you have your tiny object, you might as well use it.</p>
-
-<h3>Methods</h3>
-
-<table>
-<tr>
-<th>Method</th>
-    <th>Parameters</th>
-    <th>Description</th>
-  </tr>
-<tr>
-<td><strong>hasClass**</strong></td>
-    <td>
-<em>String</em> class</td>
-    <td>Returns whether or not <strong>all</strong> the elements in the tiny object have the given class
-  </td>
-</tr>
-<tr>
-<td><strong>addClass</strong></td>
-    <td>
-<em>String</em> class</td>
-    <td>Adds the given class to all the elements in the tiny object.</td>
-  </tr>
-<tr>
-<td><strong>removeClass</strong></td>
-    <td>
-<em>String</em> class</td>
-    <td>Removes the given class from all the elements in the tiny object.</td>
-  </tr>
-<tr>
-<td><strong>css</strong></td>
-    <td>
-<em>String</em> property, <em>String</em> value<br><em>JSON Object</em> attributes</td>
-    <td>Sets the CSS of the elements in the tiny object. A property/value pair can be passed, or a JSON object, like so:
-         
-            $('#foo').css('color', 'red'); // Works
-            $('#foo').css({
-            'color': 'red',
-            'background': 'black'
-            }); // Works
-         
-    </td>
-  </tr>
-<tr>
-<td><strong>hide</strong></td>
-   <td></td>
-   <td>Hides all the elements in the tiny object.</td>
-  </tr>
-<tr>
-<td><strong>show</strong></td>
-    <td></td>
-    <td>Shows all the elements in the tiny object.</td>
-  </tr>
-<tr>
-<td><strong>toggle</strong></td>
-    <td></td>
-    <td>Toggles the visibility of the elements in the tiny object.</td>
-  </tr>
-<tr>
-<td><strong>attr</strong></td>
-    <td>
-<em>String</em> attribute, <em>String</em> value<br><em>JSON Object</em> attributes</td>
-    <td>Much like the css method, the attribute method accepts either an attribute/value pair or a JSON object of key/value pairs:
-         
-            $('#foo').attr('data-awesome', 'yes'); // Works
-            $('#foo').attr({
-                'data-awesome': 'yes',
-                'data-easy': 'yes'
-            }); // Works
-         
-    </td>
-  </tr>
-<tr>
-<td><strong>each</strong></td>
-    <td>
-<em>Function</em> fn</td>
-    <td>Executes the function on each of the elements passed. The parameters passed are the key, and the object as a whole. For example:
-         
-            $('div').each(function(key, obj) {
-                console.log(this); // The current object
-                console.log(key); // The current position in the tiny object (e.g. 0)
-                console.log(obj); // The tiny object
-            });
-         
-    </td>
-  </tr>
-</table><h3>Extending</h3>
-
-<p>Extensions for tiny.js can be made just the same as for <a href="http://jquery.com">jQuery</a>. Here's a base template:</p>
-
- 
-$.fn.myCoolPlugin = function(opts) {
-    return this.each(function() {
-        // Do something with each object here
-    });
-};
- 
-      </section>
-
-      <footer>
-        <span class="ribbon-outer">
-          <span class="ribbon-inner">
-            <p>this project by <a href="https://github.com/angusgibbs">angusgibbs</a> can be found on <a href="https://github.com/angusgibbs/tinyjs">GitHub</a></p>
-          </span>
-          <span class="left-tail"></span>
-          <span class="right-tail"></span>
-        </span>
-        <p>Generated with <a href="http://pages.github.com">GitHub Pages</a> using Merlot</p>
-        <span class="octocat"></span>
-      </footer>
-
-    </div>
-
-              <script type="text/javascript">
-            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-          </script>
-          <script type="text/javascript">
-            try {
-              var pageTracker = _gat._getTracker("UA-29686666-1");
-            pageTracker._trackPageview();
-            } catch(err) {}
-          </script>
-
-  </body>
-</html>
->>>>>>> 28d8bbdbc98ab95ceb4583729bae9c1bd8c68fe2
+	
+</body></html>
