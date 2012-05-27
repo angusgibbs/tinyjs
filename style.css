@@ -1,0 +1,181 @@
+@import url(http://fonts.googleapis.com/css?family=Oswald:700);
+
+body {
+	background: #eee;
+	margin: 20px auto;
+	width: 70%;
+	font-family: Georgia, serif;
+}
+
+.wrap {
+	background: #fff;
+	position: relative;
+	padding: 100px 0;
+}
+
+.main {
+	padding: 16px;
+}
+
+.logo {
+	text-align: center;
+	font-family: 'Oswald', sans-serif;
+	font-size: 40px;
+	text-transform: uppercase;
+	background: #CE1414;
+	color: #fff;
+	height: 84px;
+	position: absolute;
+	top: 0;
+	left: -20px;
+	right: -20px;
+	margin: 0;
+}
+
+	.logo:before {
+		border-top: 20px solid #A81010;
+		border-left: 20px solid transparent;
+		position: absolute;
+		left: 0;
+		top: 84px;
+		content: '';
+	}
+
+	.logo:after {
+		border-top: 20px solid #A81010;
+		border-right: 20px solid transparent;
+		position: absolute;
+		right: 0;
+		top: 84px;
+		content: '';
+	}
+
+	.logo span {
+		color: #bbb;
+		display: block;
+		font-size: 25px;
+		font-style: italic;
+		text-align: center;
+		text-transform: lowercase;
+		margin: -15px 0 0;
+	}
+
+h1, h2, h3 {
+	font-family: 'Oswald', sans-serif;
+	font-size: 30px;
+	margin: 0 0 16px;
+}
+
+h3 {
+	color: #555;
+	font-size: 25px;
+}
+
+h2 + h3 {
+	margin-top: -16px;
+}
+
+pre, p {
+	margin: 0 0 16px;
+}
+
+pre {
+	font-family: 'Courier New', Courier, monospace;
+	font-size: 16px;
+}
+
+code {
+	padding: 2px;
+	background: #ddd;
+	border-radius: 4px;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+a {
+	color: #CE1414;
+	text-decoration: none;
+}
+
+	a:hover {
+		text-decoration: underline;
+	}
+
+	.prettyprint a span {
+		color: #fff;
+		border-bottom: 1px solid #CE1414;
+	}
+
+	.prettyprint a:hover {
+		text-decoration: none;
+	}
+
+table {
+	border-collapse: collapse;
+	margin: 0 0 16px;
+}
+
+th, td {
+	border: 1px solid #000;
+	padding: 8px;
+}
+
+th {
+	background: #555;
+	color: #fff;
+}
+
+	td em {
+		color: #333;
+	}
+
+	td p, td pre, td ul {
+		margin: 16px 0 0;
+	}
+
+		td p:first-child, td pre:first-child, td ul:first-child {
+			margin-top: 0;
+		}
+
+footer {
+	text-align: center;
+	font-family: 'Oswald', sans-serif;
+	font-size: 25px;
+	text-transform: uppercase;
+	background: #CE1414;
+	color: #bbb;
+	height: 40px;
+	position: absolute;
+	bottom: 0;
+	left: -10px;
+	right: -10px;
+	margin: 0;
+}
+
+	footer:before {
+		border-bottom: 10px solid #A81010;
+		border-left: 10px solid transparent;
+		position: absolute;
+		left: 0;
+		bottom: 40px;
+		content: '';
+	}
+
+	footer:after {
+		border-bottom: 10px solid #A81010;
+		border-right: 10px solid transparent;
+		position: absolute;
+		right: 0;
+		bottom: 40px;
+		content: '';
+	}
+
+	footer a {
+		color: #fff;
+		text-decoration: none;
+	}
+
+		footer a:hover {
+			color: #000;
+			text-decoration: none;
+		}
