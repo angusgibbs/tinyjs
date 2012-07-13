@@ -42,7 +42,7 @@ describe('Filters', function() {
 		elOne.style.display = 'none';
 
 		// Get the elements
-		tinyObj = $('#wrapper div').filter('visible');
+		tinyObj = $('#wrapper div').is('visible');
 
 		// Test
 		expect(tinyObj[0]).toEqual(elTwo);
@@ -53,7 +53,7 @@ describe('Filters', function() {
 		elOne.style.display = 'none';
 
 		// Get the elements
-		tinyObj = $('#wrapper div').filter('hidden');
+		tinyObj = $('#wrapper div').is('hidden');
 
 		// Test
 		expect(tinyObj[0]).toEqual(elOne);
@@ -61,7 +61,7 @@ describe('Filters', function() {
 
 	it('Should filter out elements that are empty', function() {
 		// Get the elements
-		tinyObj = $('#wrapper').filter('empty');
+		tinyObj = $('#wrapper').is('empty');
 
 		// Test
 		expect('0' in tinyObj).toEqual(false);

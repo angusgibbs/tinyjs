@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Test</title>
+		<!-- <script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script> -->
+	</head>
+	<body>
+		<div id="name" class="div something">
+			<a href="http://angusgibbs.com/hello/world" title="yessir">Some a tag with a <span>span</span></a>
+			<p>Somklsdjfaksfjasdflk;asjfdklasjfklasjfd</p>
+		</div>
+		<div class="duda">Something awesome</div>
+		<ul id="something" class="yes">
+			<li><a href="#">First</a></li>
+			<li><a href="#">Second</a></li>
+			<li><a href="#">Third</a></li>
+		</ul>
+		<div id="empty"></div>
+		<textarea id="editor"></textarea>
+		<noscript>What the hell dude?</noscript>
+		<form id="stuff">
+			<span>Hello!</span>
+			<input type="text" name="hi" id="hi">
+			<input type="text" name="bye" id="bye">
+			<input type="email" id="cya">
+			<input type="radio" name="hello" id="hello" value="yes">
+			<input type="radio" name="hello" id="hello" value="no">
+			<input type="checkbox" name="check1" id="check1">
+			<input type="checkbox" name="check2" id="check2">
+			<input type="checkbox" name="check3" id="check3">
+			<input type="hidden" id="hideme" value="put">
+			<select name="hi" id="hi">
+				<option value="yes">Yes</option>
+				<option value="hi">Hi</option>
+			</select>
+			<input type="submit" value="hi" id="submit">
+		</form>
+		<script src="tiny.js"></script>
+		<script type="text/html" id="user_tmpl">
+			<% for (var i = 0; i < users.length; i++) { %>
+				<li><a href="<%= users[i].url %>"><%= users[i].name %></a></li>
+			<% } %>
+		</script>
+		<script>
+			$('#something').on('click', function() {
+				alert('hi');
+			});
+
+			$('#something').on('click.stuff', function() {
+				alert('stuff');
+			});
+
+			$('#name').on('click', function() {
+				$('#something').off('click').off('click.stuff');
+			});
+		</script>
+	</body>
+</html>

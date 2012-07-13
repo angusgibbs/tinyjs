@@ -17,17 +17,19 @@
 	 * @param {String} sel
 	 */
 	$.init = function(sel) {
+		var i, l, temp;
+
 		// Select the correct nodes from the input
 		// CASE: object passed
 		if (typeof sel === 'object') {
 			// CASE: Array of objects passed
 			if ($.isArray(sel) || $.type(sel) === 'nodelist') {
 				// Store the nodes into the tiny object
-				for (var i = 0; i < sel.length; i++) {
+				for (i = 0, l = sel.length; i < l; i++) {
 					this[i] = sel[i];
 				}
 
-				// There is no sel
+				// There is no selector
 				this.sel = '';
 
 				// Store the number of nodes
@@ -42,11 +44,24 @@
 		}
 		// CASE: selector passed
 		else if (typeof sel === 'string') {
-			// Query the nodes from the DOM
-			var nodes = $.qs(sel);
+			// Split by comma
+			var sels = sel.split(/\s*,\s*/);
+
+			// Create an array to store all the nodes to
+			var nodes = [];
+
+			// Loop through each selector and execute the query, saving the result
+			for (i = 0, l = sels.length; i < l; i++) {
+				temp = $.qs(sels[i]);
+				for (var j = 0, k = temp.length; j < k; j++) {
+					nodes.push(temp[j]);
+				}
+			}
+
+			// console.log(nodes);
 
 			// Store the nodes in the tiny object
-			for (var i = 0; i < nodes.length; i++) {
+			for (i = 0, l = nodes.length; i < l; i++) {
 				this[i] = nodes[i];
 			}
 
@@ -58,6 +73,11 @@
 		// Set an attribute of tiny for use in determining whether or not an object is a tiny object
 		this.tiny = true;
 	};
+
+	/**
+	 * Caching mechanism for generated templating functions
+	 */
+	var templateCache = {};
 
 	/**
 	 * Methods that work with the nodes
@@ -225,11 +245,72 @@
 		},
 
 		/**
+		 * Replaces the objects of this with whatever is returned
+		 *
+		 * @param {Function} fn
+		 */
+		_replace: function(fn) {
+			var i, l;
+
+			// Get the new objects
+			var newObjects = fn.call(this);
+
+			// Delete the old objects
+			for (i = 0; i < this.length; i++) {
+				delete this[i];
+			}
+
+			// Store the new length
+			this.length = newObjects.length;
+
+			// Store the new objects
+			for (i = 0, l = this.length; i < l; i++) {
+				this[i] = newObjects[i];
+			}
+
+			return this;
+		},
+
+		/**
+		 * Finds the given selector using each object as a parent
+		 *
+		 * @param {String} sel
+		 */
+		find: function(sel) {
+			// Update the selector
+			if (this.sel) {
+				this.sel += ' ' + sel;
+			}
+
+			return this._replace(function() {
+				// Create an array to store the new nodes to
+				var newObjects = [];
+
+				// Make an array of all the selectors
+				var sels = sel.split(/\s*,\s*/);
+
+				// Loop through each object and treat it as a parent
+				this.each(function() {
+					// Query each selector
+					for (var i = 0, l = sels.length; i < l; i++) {
+						// Save the matches
+						var temp = $.qs(sels[i], this);
+						for (var j = 0, k = temp.length; j < k; j++) {
+							newObjects.push(temp[j]);
+						}
+					}
+				});
+
+				return newObjects;
+			});
+		},
+
+		/**
 		 * Returns whether or not ALL the elements pass the given filter
 		 *
 		 * @param {String} test
 		 */
-		is: function(test) {
+		matches: function(test) {
 			// Assume all elements pass the test until one is found that does not
 			var passes = true;
 
@@ -249,29 +330,37 @@
 		 *
 		 * @param {String} test
 		 */
-		filter: function(test) {
-			// Store all the nodes that pass the given filter
-			var matches = [];
-			for (var i = 0; i < this.length; i++) {
-				if ($.is[test](this[i])) {
-					matches.push(this[i]);
+		is: function(test) {
+			return this._replace(function() {
+				// Store all the nodes that pass the given filter
+				var matches = [];
+				for (var i = 0; i < this.length; i++) {
+					if ($.is[test](this[i])) {
+						matches.push(this[i]);
+					}
 				}
-			}
 
-			// Remove the old values from the array
-			for (i = 0; i < this.length; i++) {
-				delete this[i];
-			}
+				return matches;
+			});
+		},
 
-			// Store the new length
-			this.length = matches.length;
+		/**
+		 * Filters out elements that pass the given filter
+		 *
+		 * @param {String} test
+		 */
+		not: function(test) {
+			return this._replace(function() {
+				// Store all the nodes that pass the given filter
+				var matches = [];
+				for (var i = 0; i < this.length; i++) {
+					if (!$.is[test](this[i])) {
+						matches.push(this[i]);
+					}
+				}
 
-			// Store the new elements
-			for (i = 0; i < this.length; i++) {
-				this[i] = matches[i];
-			}
-
-			return this;
+				return matches;
+			});
 		},
 
 		/**
@@ -319,33 +408,54 @@
 		/**
 		 * Really simple templating system
 		 *
-		 * @param {String} template
+		 * @param {Mixed} template
 		 * @param {Object} vals
 		 *
-		 * @param {Object} template
-		 * @param {Object} vals
+		 * @credit http://ejohn.org/blog/javascript-micro-templating/
 		 */
-		template: function(template, vals) {
-			// Check the template format
-			// CASE: object
+		template: function(template, data) {
+			// Get the template string
+			// HANDLE: tiny object
+			if (template.tiny) {
+				template = template.html();
+			}
+			// HANDLE: DOMObject
 			if (typeof template === 'object') {
-				// CASE: tiny object
-				if ('tiny' in template) {
-					template = template.html();
-				}
-				// CASE: DOMObject
-				else {
-					template = template.innerHTML;					
-				}
+				template = template.innerHTML;
 			}
 
-			// Set the HTML of each of the elements to the templated value
+			// Try to get the template from cache
+			var fn = templateCache[template] || Function('obj',
+				'var p=[],print=function(){p.push.apply(p,arguments);};' +
+
+				// Introduce the data as local variables using with
+				"with(obj || {}){p.push('" +
+
+				// Convert the template to pure JavaScript
+				template
+					.replace(/[\r\t\n]/g, ' ')
+					.split('<%').join('\t')
+					.replace(/((^|%>)[^\t]*)'/g, '$1\r')
+					.replace(/\t=(.*?)%>/g, "',$1,'")
+					.split('\t').join("');")
+					.split('%>').join("p.push('")
+					.split('\r').join("\\'") +
+				"');}return p.join('');" +
+
+				// Add a source URL
+				'\n//@ sourceURL=/tiny/template/source'
+			);
+
+			// Cache the function
+			if (!templateCache[template]) {
+				templateCache[template] = fn;
+			}
+
+			// Get the resulting HTML
+			var result = fn(data);
+
 			return this.each(function() {
-				var html = template;
-				for (var key in vals) {
-					html = html.replace(RegExp('\\${' + key + '}', 'g'), vals[key]);
-				}
-				this.innerHTML = html;
+				this.innerHTML = result;
 			});
 		},
 
@@ -355,50 +465,20 @@
 		 * @param {String} sel
 		 */
 		next: function(sel) {
-			// Make an array to store the matches in
-			matches = [];
+			return this._replace(function() {
+				// Make an array to store the matches in
+				matches = [];
 
-			// Loop through each of the elements and get the next sibling
-			this.each(function() {
-				var el = this.nextSibling;
-				
-				// Check to see if there was a selector passed
-				if (sel) {
-					// Add an additional case that the element must be a match
-					while(el && (el.nodeType !== 1 || !$.testSel(el, sel))) {
-						el = el.nextSibling;
+				// Loop through each of the elements and get the next sibling
+				this.each(function() {
+					var next = elementInRelation(this, 'nextSibling', sel);
+					if (next) {
+						matches.push(next);
 					}
-				}
-				else {
-					// Keep getting the next element while there is one and while it is not a DOMObject
-					while(el && el.nodeType !== 1) {
-						el = el.nextSibling;
-					}
-				}
-				
-				// Save the element that was found, if there was one and it is a match
-				if (el) {
-					if (sel && $.testSel(el, sel)) {
-						matches.push(el);
-					}
-					else {
-						matches.push(el);
-					}
-				}
+				});
+
+				return matches;
 			});
-
-			// Remove the old elements
-			for (var i = 0; i < this.length; i++) {
-				delete this[i];
-			}
-
-			// Store the data that was found
-			this.length = matches.length;
-			for (i = 0; i < this.length; i++) {
-				this[i] = matches[i];
-			}
-
-			return this;
 		},
 
 		/**
@@ -407,50 +487,20 @@
 		 * @param {String} sel
 		 */
 		prev: function(sel) {
-			// Make an array to store the matches in
-			matches = [];
+			return this._replace(function() {
+				// Make an array to store the matches in
+				matches = [];
 
-			// Loop through each of the elements and get the next sibling
-			this.each(function() {
-				var el = this.previousSibling;
-				
-				// Check to see if there was a selector passed
-				if (sel) {
-					// Add an additional case that the element must be a match
-					while(el && (el.nodeType !== 1 || !$.testSel(el, sel))) {
-						el = el.previousSibling;
+				// Loop through each of the elements and get the next sibling
+				this.each(function() {
+					var prev = elementInRelation(this, 'previousSibling', sel);
+					if (prev) {
+						matches.push(prev);
 					}
-				}
-				else {
-					// Keep getting the previous element while there is one and while it is not a DOMObject
-					while(el && el.nodeType !== 1) {
-						el = el.previousSibling;
-					}
-				}
-				
-				// Save the element that was found, if there was one and it is a match
-				if (el) {
-					if (sel && $.testSel(el, sel)) {
-						matches.push(el);
-					}
-					else {
-						matches.push(el);
-					}
-				}
+				});
+
+				return matches;
 			});
-
-			// Remove the old elements
-			for (var i = 0; i < this.length; i++) {
-				delete this[i];
-			}
-
-			// Store the data that was found
-			this.length = matches.length;
-			for (i = 0; i < this.length; i++) {
-				this[i] = matches[i];
-			}
-
-			return this;
 		},
 
 		/**
@@ -459,84 +509,78 @@
 		 * @param {String} sel
 		 */
 		parent: function(sel) {
-			// Make an array to store the matches in
-			matches = [];
+			return this._replace(function() {
+				// Make an array to store the matches in
+				matches = [];
 
-			// Loop through each of the elements and get the next sibling
-			this.each(function() {
-				var el = this.parentNode;
-				
-				// Check to see if there was a selector passed
-				if (sel) {
-					// Add an additional case that the element must be a match
-					while(el && (el.nodeType !== 1 || !$.testSel(el, sel))) {
-						el = el.parentNode;
+				// Loop through each of the elements and get the next sibling
+				this.each(function() {
+					var parent = elementInRelation(this, 'parentNode', sel);
+					if (parent) {
+						matches.push(parent);
 					}
+				});
+
+				// Keep only the unique matches
+				return $.unique(matches);
+			});
+		},
+
+		/**
+		 * Inserts an element before each of the nodes
+		 *
+		 * @param {String} tagName
+		 * @param {Object} attrs
+		 * @param {String} html
+		 */
+		before: function(tagName, attrs, html) {
+			// Create the element
+			var el = createElement(tagName, attrs, html);
+
+			// Append before each of the elements
+			return this.each(function() {
+				this.parentNode.insertBefore(el, this);
+			});
+		},
+
+		/**
+		 * Inserts an element after each of the nodes
+		 *
+		 * @param {String} tagName
+		 * @param {Object} attrs
+		 * @param {String} html
+		 */
+		after: function(tagName, attrs, html) {
+			// Create the element
+			var el = createElement(tagName, attrs, html);
+
+			// Append after each of the elements
+			return this.each(function() {
+				// Get the next sibling
+				var nextSibling = elementInRelation(this, 'nextSibling');
+
+				if (nextSibling) {
+					// If the next sibling still exists, insert before it
+					nextSibling.parentNode.insertBefore(el, nextSibling);
 				}
 				else {
-					// Keep getting the previous element while there is one and while it is not a DOMObject
-					while(el && el.nodeType !== 1) {
-						el = el.parentNode;
-					}
-				}
-				
-				// Save the element that was found, if there was one and it is a match
-				if (el) {
-					if (sel && $.testSel(el, sel)) {
-						matches.push(el);
-					}
-					else {
-						matches.push(el);
-					}
+					// Otherwise append the child to the parent and it will
+					//   automatically go after
+					this.parentNode.appendChild(el);
 				}
 			});
-
-			// Keep only the unique matches
-			matches = $.unique(matches);
-
-			// Remove the old elements
-			for (var i = 0; i < this.length; i++) {
-				delete this[i];
-			}
-
-			// Store the data that was found
-			this.length = matches.length;
-			for (i = 0; i < this.length; i++) {
-				this[i] = matches[i];
-			}
-
-			return this;
 		},
 
 		/**
 		 * Appends an element to each element
 		 *
 		 * @param {String} tag		 
-		 * @param {String} html
 		 * @param {Object} attrs
+		 * @param {String} html
 		 */
-		append: function(tag, html, attrs) {
-			// Set defaults for the attributes and innerHTML
-			attrs = attrs || {};
-			html = html || '';
-
-			var el;
-
-			// Check the input format
-			// CASE: object
-			if (typeof tag === 'object') {
-				// DOMObject was passed, use this
-				el = tag;
-			}
-			else {
-				// Parameters were passed, construct an element
-				// Create the element, add the attributes, and edit the innerHTML
-				el = document.createElement(tag);
-				for (var key in attrs) {
-					el.setAttribute(key, attrs[key]);
-				}
-				el.innerHTML = html;
-			}
+		append: function(tagName, attrs, html) {
+			// Create the element
+			var el = createElement(tagName, attrs, html);
 
 			// Loop through each element
 			return this.each(function() {
@@ -549,31 +593,12 @@
 		 * Prepends an element to each element
 		 *
 		 * @param {String} tag
-		 * @param {String} html
 		 * @param {Object} attrs		 
+		 * @param {String} html
 		 */
-		prepend: function(tag, html, attrs) {
-			// Set defaults for the attributes and innerHTML
-			attrs = attrs || {};
-			html = html || '';
-
-			var el;
-
-			// Check the input format
-			// CASE: object
-			if (typeof tag === 'object') {
-				// DOMObject was passed, use this
-				el = tag;
-			}
-			else {
-				// Parameters were passed, construct an element
-				// Create the element, add the attributes, and edit the innerHTML
-				el = document.createElement(tag);
-				for (var key in attrs) {
-					el.setAttribute(key, attrs[key]);
-				}
-				el.innerHTML = html;
-			}
+		prepend: function(tagName, attrs, html) {
+			// Create the element
+			var el = createElement(tagName, attrs, html);
 
 			// Loop through each element
 			return this.each(function() {
@@ -587,53 +612,460 @@
 					this.appendChild(el);
 				}
 			});
+		},
+
+		/**
+		 * Reduces the set of elements to just the element at the index specified
+		 *
+		 * @param {Integer} index
+		 */
+		eq: function(index) {
+			return this._replace(function() {
+				return [this[index]];
+			});
+		},
+
+		/**
+		 * Creates a query string from a form
+		 */
+		serialize: function() {
+			// Return false if there isn't a first element to work with or if the element is not a form
+			if (!('0' in this) || this[0].nodeName !== 'FORM') {
+				return false;
+			}
+
+			// Get the form
+			var form = this[0];
+			var queryString = '';
+			var el;
+
+			// Loop through all the inputs
+			for (var i = 0; i < form.length; i++) {
+				el = form[i];
+
+				// Don't add if it's a submit/reset or if it's a checkbox/radio button that isn't checked
+				if ($.inArray(el.type.toLowerCase(), ['submit', 'reset']) || ($.inArray(el.type.toLowerCase(), ['radio', 'checkbox']) && !el.checked)) {
+					continue;
+				}
+
+				// Add to the query string
+				queryString += '&' + (el.name ? el.name : el.id) + '=' + encodeURIComponent(el.value);
+			}
+
+			return queryString.substr(1);
+		},
+
+		/**
+		 * Triggers a custom event
+		 *
+		 * @param {String} evt
+		 * @param {Mixed} data
+		 */
+		trigger: function(evtName, data) {
+			// HANDLE: Custom event
+			// If the tiny object is empty assume it is a custom event
+			if (!this[0] || isCustomEvent(this[0], evtName)) {
+				return this.each(function() {
+					customEvents[evtName].call(this, data);
+				});
+			}
+			// HANDLE: Event that needs to be triggered
+			else {
+				// Create the event
+				var evt;
+				if (document.createEvent) {
+					evt = document.createEvent('HTMLEvents');
+					evt.initEvent(evtName, true, true);
+				}
+				else {
+					evt = document.createEventObject();
+					evt.eventType = evtName;
+				}
+
+				// Trigger the event on each of the elements
+				return this.each(function() {
+					if (document.createEvent) {
+						this.dispatchEvent(evt);
+					}
+					else {
+						this.fireEvent('on' + eventName, evt);
+					}
+				});
+			}
 		}
 	};
 
 	/**
-	 * Event binding
+	 * Throttles an event (for use with $.throttleEvents)
+	 *
+	 * @param {Function} fn
+	 * @param {Integer} wait
+	 *
+	 * @return {Function}
+	 */
+	function throttle(fn, wait) {
+		// Default wait to $.throttleWait
+		wait = wait || $.throttleWait;
+
+		var args;
+		var result;
+		var context;
+		var timeoutId;
+		var lastCalled = 0;
+
+		function trailingCall() {
+			lastCalled = new Date();
+			timeoutId = undefined;
+			fn.apply(context, args);
+		}
+
+		return function() {
+			var now = new Date();
+			var remain = wait - (now - lastCalled);
+
+			args = arguments;
+			context = this;
+
+			if (remain <= 0) {
+				lastCalled = now;
+				result = fn.apply(context, args);
+			}
+			else if (!timeoutId) {
+				timeoutId = setTimeout(trailingCall, remain);
+			}
+
+			return result;
+		};
+	}
+
+	/**
+	 * Events that should be throttled and the default wait to use
+	 */
+	$.throttleEvents = ['scroll'];
+	$.throttleWait = 250;
+
+	/**
+	 * Checks whether the given event should be throttle
 	 *
 	 * @param {String} evt
-	 * @param {Function} fn
+	 *
+	 * @return {Boolean}
+	 */
+	function shouldThrottle(evt) {
+		return $.inArray(evt, $.throttleEvents);
+	}
+
+	/**
+	 * Creates an element with the specified attributes
+	 *
+	 * @param {String} tagName
+	 * @param {Object} attrs
+	 * @param {String} html
+	 *
+	 * @return {DOMObject}
+	 */
+	function createElement(tagName, attrs, html) {
+		var el = typeof tagName === 'string' ? document.createElement(tagName) : el;
+
+		// Check if attrs is an iterable object
+		if (typeof attrs === 'string') {
+			// Attrs was not defined; flip attrs and html
+			html = attrs;
+		}
+		else {
+			// Attrs was defined; set all the attributes
+			for (var attr in attrs) {
+				el.setAttribute(attr, attrs[attr]);
+			}
+		}
+
+		// Set the html if it was passed
+		if (html) {
+			el.innerHTML = html;
+		}
+
+		return el;
+	}
+
+	/**
+	 * Finds the first element in relation to the current element with
+	 * the given selector (if passed)
+	 *
+	 * @param {DOMObject} el
+	 * @param {String} relation
+	 * @param {String} sel
+	 */
+	function elementInRelation(el, relation, sel) {
+		el = el[relation];
+		
+		// Check to see if there was a selector passed
+		if (sel) {
+			// Add an additional case that the element must be a match
+			while(el && (el.nodeType !== 1 || !$.testSel(el, sel))) {
+				el = el[relation];
+			}
+		}
+		else {
+			// Keep getting the previous element while there is one and while it is not a DOMObject
+			while(el && el.nodeType !== 1) {
+				el = el[relation];
+			}
+		}
+		
+		// Save the element that was found, if there was one and it is a match
+		if (el) {
+			if (sel && $.testSel(el, sel)) {
+				return el;
+			}
+			else {
+				return el;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Event binding and unbinding
+	 *
+	 * For binding:
+	 *  @param {DOMObject} el
+	 *  @param {String} evt
+	 *  @param {Function} fn
+	 *  @param {String} namespace
+	 *
+	 * For unbinding:
+	 *  @param {DOMObject} el
+	 *  @param {String} evt
+	 *  @param {String} namespace
+	 */
+	var bind;
+	var unbind;
+	if (typeof addEventListener !== 'undefined') {
+		bind = function(el, evt, fn, namespace) {
+			// Bind the function to the event
+			el.addEventListener(evt, fn, false);
+
+			// Store the function to the element so it can be unbound later.
+			//   Use the namespace if available
+			var hash = 'tiny_' + evt + (namespace ? '_' + namespace : '');
+
+			// Create an array to hold the functions if there is not one already
+			if (!el[hash]) {
+				el[hash] = [];
+			}
+
+			// Push the function to the storage on the element
+			el[hash].push(fn);
+		};
+
+		unbind = function(el, evt, namespace) {
+			var hash = 'tiny_' + evt + (namespace ? '_' + namespace : '');
+
+			// Remove the event listener of each of the stored functions			
+			for (var i = 0, l = el[hash].length; i < l; i++) {
+				el.removeEventListener(evt, el[hash][i], false);
+			}
+
+			// Delete the functions from the storage on the element
+			delete el[hash];
+		};
+	}
+	else if (typeof attachEvent !== 'undefined') {
+		bind = function(el, evt, fn, namespace) {
+			// Create a function that will call the user function inside of it
+			var onEvent = function() {
+				var type = event.type;
+				var relatedTarget = null;
+
+				// If the type is mouseover or mouseout, set the realtedTarget
+				if (type === 'mouseover' || type === 'mouseout') {
+					relatedTarget = type === 'mouseover' ? event.fromElement : event.toElement;
+				}
+
+				// Call the function in the proper context
+				fn.call(el, {
+					target: event.srcElement,
+					type: type,
+					relatedTarget: relatedTarget,
+					_event: event,
+					preventDefault: function() {
+						this._event.returnValue = false;
+					},
+					stopPropagation: function() {
+						this._event.cancelBubble = true;
+					}
+				});
+			};
+
+			// Store the function to the element so it can be unbound later.
+			//   Use the namespace if available
+			el['tiny_' + evt + '_' + (namespace ? namespace : '')] = fn;
+
+			// Bind the event to the element
+			el.attachEvent('on' + evt, onEvent);
+		};
+
+		unbind = function(el, evt, namespace) {
+			el.detachEvent('on' + evt, el['tiny_' + evt + '_' + (namespace ? namespace : '')]);
+			delete el['tiny_' + evt + '_' + (namespace ? namespace : '')];
+		};
+	}
+
+	/**
+	 * Keyboard shortcut helper
+	 *
+	 * @param {DOMObject} el
+	 * @param {String} keyCombination
+	 * @param {String} fn
+	 * @param {DOMObject} context
+	 */
+	function keyboardShortcut(el, keyCombination, fn, context) {
+		// Map some key bindings to the longhand version
+		var helpers = {
+			'?': 'shift+/',
+			'!': 'shift+1',
+			'\\+': 'shift+='
+		};
+
+		for (var helper in helpers) {
+			keyCombination = keyCombination.replace(helper, helpers[helper]);
+		}
+
+		// Figure out which keys need to be pressed (ctrl, alt, shift)
+		var keys = keyCombination.toLowerCase().split('+');
+		var key = null;
+		var ctrl = false;
+		var alt = false;
+		var shift = false;
+
+		for (var i = 0, l = keys.length; i < l; i++) {
+			if (keys[i] === 'ctrl') {
+				ctrl = true;
+			}
+			else if (keys[i] === 'shift') {
+				shift = true;
+			}
+			else if (keys[i] === 'alt') {
+				alt = true;
+			}
+			else {
+				key = keys[i].toUpperCase().charCodeAt(0);
+			}
+		}
+
+		// Bind the event
+		bind(el, 'keyup', function(e) {
+			var isShortcut = true;
+			if (ctrl && !e.ctrlKey || shift && !e.shiftKey ||
+					alt && !e.altKey || key && e.which !== key) {
+				isShortcut = false;
+			}
+
+			if (isShortcut) {
+				e.preventDefault();
+				e.stopPropagation();
+				fn.call(context || el, e);
+			}
+		});
+	}
+
+	/**
+	 * Decides whether the given event is a shortcut
+	 *
+	 * @param {String} evt
+	 *
+	 * @return {Boolean}
+	 */
+	function isShortcut(evt) {
+		return evt.length === 1 || evt.indexOf('+') !== -1;
+	}
+
+	/**
+	 * All the custom events
+	 */
+	var customEvents = {};
+
+	/**
+	 * Returns whether there is a custom event with the given name
+	 *
+	 * @param {String} evt
+	 *
+	 * @return {Boolean}
+	 */
+	function isCustomEvent(el, evt) {
+		return !('on' + evt in el);
+	}
+
+	/**
+	 * Event listening and delegating
 	 *
 	 * @param {String} evt
 	 * @param {String} children
 	 * @param {Function} fn
+	 * @param {String} namespace
+	 *
+	 * @param {String} evt
+	 * @param {String} children
+	 * @param {Function} fn
+	 * @param {String} namespace
 	 */
-	if (typeof addEventListener !== 'undefined') {
-		// Use new standards model
-		$.fn.on = function(evt, children, fn) {
-			var eventHash = 'tiny_' + evt;
+	$.fn.on = function(evts, children, fn, shortcut) {
+		// Decide whether the event should be delegated or bound directly
+		var shouldDelegate = typeof fn === 'function';
+
+		// If the event should be bound directly the variables need to be moved around
+		if (!shouldDelegate) {
+			shortcut = fn;
+			fn = children;
+		}
+
+		// Check for a shortcut and bind the function to that as well
+		if (shortcut) {
+			keyboardShortcut(window, shortcut, fn, this[0] ? this[0] : window);
+		}
+
+		// Turn evt into an array if it is not one
+		evts = $.isArray(evts) ? evts : [evts];
+
+		for (var i = 0, l = evts.length; i < l; i++) {
+			// Get the event and namespace
+			var eventParts = evts[i].split('.');
+			var namespace = eventParts[1];
+			var evt = eventParts[0];
+			var shouldThrottleEvent = shouldThrottle(evt);
 
 			// Check the input format
-			// CASE: string, function
-			if (typeof children === 'function') {
-				// Just bind the function to the evt
-				fn = children;
-
-				return this.each(function() {
-					// Bind to the evt
-					this.addEventListener(evt, fn, false);
-
-					// Store a copy of the function on the element
-					this[eventHash] = fn;
+			// CASE: string, function[, string]
+			if (!shouldDelegate) {
+				this.each(function() {
+					if (isShortcut(evt)) {
+						keyboardShortcut(this, evt, fn);
+					}
+					else if (isCustomEvent(this, evt)) {
+						customEvents[evt] = fn;
+					}
+					else {
+						bind(this, evt, shouldThrottleEvent ? throttle(fn) : fn, namespace);
+					}
 				});
 			}
-			// CASE: string, string, function
+			// CASE: string, string, function[, string]
 			else {
-				// Delegate evt
-				return this.each(function() {
+				// Delegate event
+				this.each(function() {
 					// Save the current working element
 					var el = this;
 
-					// Bind to the evt
-					el.addEventListener(evt, function(e) {
-						// Get the evt target
+					// Make a function that will bubble up then conditionally
+					//   call the callback
+					var bubbleFunc = function(e) {
+						// Get the event target
 						var target = e.target;
 
-						// Bubble up while the target is not a match and you haven't reached the element
+						// Bubble up while the target is not a match and you haven't reached the top
 						while (target !== el && !$.testSel(target, children)) {
-							// Move up a level on the DOM
+							// Move up a level in the DOM
 							target = target.parentNode;
 						}
 
@@ -641,121 +1073,44 @@
 						if (target !== el) {
 							fn.call(target, e);
 						}
-					}, false);
-
-					// Store a copy of the function on the element
-					el[eventHash] = fn;
-				});
-			}
-		};
-
-		$.fn.off = function(evt) {
-			return this.each(function() {
-				this.removeEventListener(evt, this['tiny_' + evt], false);
-			});
-		};
-	}
-	else if (typeof attachEvent !== 'undefined') {
-		// Use old IE evt model
-		$.fn.on = function(evt, sel, fn) {
-			var eventHash = 'tiny_' + evt;
-
-			// Check the input format
-			// CASE: string, function
-			if (typeof sel === 'function') {
-				// Just bind the function to the event
-				fn = sel;
-
-				return this.each(function() {
-					// Save a copy of the current working element
-					var el = this;
-
-					// Store the function in the element so it can be removed later
-					el[eventHash] = function() {
-						// Get the type and the related target
-						var type = event.type;
-						var relatedTarget = null;
-
-						// If the event is a mouseover or mouseout, set the relatedTarget
-						if (type === 'mouseover' || type === 'mouseout') {
-							relatedTarget = type === 'mouseover' ? event.fromElement : event.toElement;
-						}
-
-						// Call the function in the proper context
-						fn.call(el, {
-							target: event.srcElement,
-							type: type,
-							relatedTarget: relatedTarget,
-							_event: event,
-							preventDefault: function() {
-								this._event.returnValue = false;
-							},
-							stopPropagation: function() {
-								this._event.cancelBubble = true;
-							}
-						});
 					};
 
-					// Attach the event to the function
-					el.attachEvent('on' + evt, this[eventHash]);
+					// Bind to the event
+					bind(el, evt, shouldThrottleEvent ? throttle(bubbleFunc) : bubbleFunc, namespace);
 				});
 			}
-			// CASE: string, string, function
-			else {
-				// Do event delegation
-				return this.each(function() {
-					// Save the current working element
-					var el = this;
+		}
 
-					// Store the function in the element so it can be removed later
-					el[eventHash] = function() {
-						// Get the type and the related target
-						var type = event.type;
-						var relatedTarget = null;
+		return this;
+	};
 
-						// If the event is a mouseover or mouseout, set the relatedTarget
-						if (type === 'mouseover' || type === 'mouseout') {
-							relatedTarget = type === 'mouseover' ? event.fromElement : event.toElement;
-						}
+	/**
+	 * Unbinding events
+	 *
+	 * @param {String} evt
+	 * @param {String} namespace
+	 */
+	$.fn.off = function(evt) {
+		// Split the event by a period to get the event and the namespace
+		var eventParts = evt.split('.');
+		var namespace = eventParts[1];
+		evt = eventParts[0];
 
-						// Get the element that the event was invoked on
-						var target = event.srcElement;
+		// Unbind each element
+		return this.each(function() {
+			unbind(this, evt, namespace);
+		});
+	};
 
-						// Keep moving up the DOM tree until you match the selector or you reach the element
-						while (target !== el && !$.testSel(target, sel)) {
-							target = target.parentNode;
-						}
-
-						// Call the function as long as you didn't reach the element
-						if (target !== el) {
-							fn.call(target, {
-								target: event.srcElement,
-								type: type,
-								relatedTarget: relatedTarget,
-								_event: event,
-								preventDefault: function() {
-									this._event.returnValue = false;
-								},
-								stopPropagation: function() {
-									this._event.cancelBubble = true;
-								}
-							});
-						}
-					};
-
-					// Attach the event to the function
-					el.attachEvent('on' + evt, this[eventHash]);
-				});
-			}
-		};
-
-		$.fn.off = function(evt) {
-			return this.each(function() {
-				this.detachEvent('on' + evt, this['tiny_' + evt]);
-				delete this['tiny_' + evt];
-			});
-		};
-	}
+	/**
+	 * Creating keyboard shortcuts
+	 *
+	 * @param keyCombination
+	 * @param {Function} fn
+	 */
+	$.shortcut = function(keyCombination, fn) {
+		keyboardShortcut(window, keyCombination, fn);
+	};
 
 	/**
 	 * AJAX
@@ -773,11 +1128,16 @@
 		var async   = o.async != null ? o.async : true;
 
 		// Construct the data object
-		// CASE: object
-		if (typeof o.data === 'object') {
+		// CASE: Tiny object
+		if (o.data.tiny) {
+			// Serialize the form
+			data = o.data.serialize();
+		}
+		// CASE: JSON object
+		else if (typeof o.data === 'object') {
 			// Create the string from the data object
 			for (var key in o.data) {
-				data += '&key=' + o.data[key];
+				data += '&' + key + '=' + encodeURIComponent(o.data[key]);
 			}
 			// Chop off the leading ampersand
 			data = data.substr(1);
@@ -785,6 +1145,16 @@
 		// CASE: string
 		else {
 			data = o.data;
+		}
+
+		// Allow simulation of PUT and DELETE requests
+		if (type === 'PUT' || type === 'DELETE') {
+			// Add _method to data
+			data += data.length === 0 ? '' : '&';
+			data += '_method=' + type;
+
+			// Make it a post request
+			type = 'POST';
 		}
 
 		// Create the xhr object
@@ -980,7 +1350,7 @@
 	};
 
 	/**
-	 * Filters, using $().is() or $().filter()
+	 * Filters, using $().matches(), $().is(), or $().not()
 	 */
 	$.is = {
 		'visible': function(el) {
@@ -1017,6 +1387,23 @@
 	 */
 	$.isArray = function(obj) {
 		return $.type(obj) === 'array';
+	};
+
+	/**
+	 * Returns whether the given key is the given array
+	 *
+	 * @param {Object} key
+	 * @param {Array} arr
+	 *
+	 * @return {Boolean} inArray
+	 */
+	$.inArray = function(key, arr) {
+		for (var i = 0; i < arr.length; i++) {
+			if (arr[i] === key) {
+				return true;
+			}
+		}
+		return false;
 	};
 
 	/**
@@ -1057,4 +1444,4 @@
 
 	// Expose $ to global scope
 	window.$ = $;
-}(document, window));
+}(window.document, window));

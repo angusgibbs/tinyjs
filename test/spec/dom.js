@@ -47,7 +47,7 @@ describe('DOM manipulation', function() {
 		describe('Appending', function() {
 			it('Should assign attributes correctly', function() {
 				// Create an element with some attributes
-				$el.append('div', '', {
+				$el.append('div', {
 					'data-hello': 'world',
 					'data-foo': 'bar'
 				});
@@ -69,7 +69,7 @@ describe('DOM manipulation', function() {
 		describe('Prepending', function() {
 			it('Should assign attributes correctly', function() {
 				// Create an element with some attributes
-				$el.append('div', '', {
+				$el.append('div', {
 					'data-hello': 'world',
 					'data-foo': 'bar'
 				});
