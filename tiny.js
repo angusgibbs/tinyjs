@@ -58,8 +58,6 @@
 				}
 			}
 
-			// console.log(nodes);
-
 			// Store the nodes in the tiny object
 			for (i = 0, l = nodes.length; i < l; i++) {
 				this[i] = nodes[i];
